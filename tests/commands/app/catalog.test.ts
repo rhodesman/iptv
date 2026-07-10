@@ -33,10 +33,10 @@ describe('app:catalog', () => {
     }
 
     // facet counts are consistent with channel membership
-    const newsFacet = catalog.filters.categories.find(f => f.id === 'news')
-    if (newsFacet) {
-      const actual = catalog.channels.filter(c => c.categories.includes('news')).length
-      expect(newsFacet.count).toBe(actual)
+    expect(catalog.filters.categories.length).toBeGreaterThan(0)
+    for (const facet of catalog.filters.categories) {
+      const actual = catalog.channels.filter(c => c.categories.includes(facet.id)).length
+      expect(facet.count).toBe(actual)
     }
 
     // country facet carries a flag emoji

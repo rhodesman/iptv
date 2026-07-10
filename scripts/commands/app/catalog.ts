@@ -1,4 +1,3 @@
-import { Collection } from '@freearhey/core'
 import { Storage } from '@freearhey/storage-js'
 import { loadData, data as apiData } from '../../api'
 import { PlaylistParser } from '../../core'
@@ -120,5 +119,5 @@ function buildFilters(channels: ChannelEntry[]): Catalog['filters'] {
 
 export async function writeCatalog(filepath: string, catalog: Catalog): Promise<void> {
   await fs.ensureDir(path.dirname(filepath))
-  await fs.writeJson(filepath, catalog)
+  await fs.writeJson(filepath, catalog, { spaces: 2 })
 }
