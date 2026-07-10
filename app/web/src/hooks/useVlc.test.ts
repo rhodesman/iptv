@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { renderHook, act, waitFor } from '@testing-library/react'
 import { useVlc } from './useVlc'
-import { api } from '../lib/apiClient'
+import { api, ApiError } from '../lib/apiClient'
 
 beforeEach(() => {
   vi.restoreAllMocks()
@@ -25,7 +25,7 @@ describe('useVlc', () => {
   })
 
   it('records vlc error code from a failed command', async () => {
-    vi.spyOn(api, 'play').mockRejectedValue(Object.assign(new Error('x'), { code: 'vlc_unreachable', name: 'ApiError' }))
+    vi.spyOn(api, 'play').mockRejectedValue(new ApiError('vlc_unreachable', 'VLC unreachable'))
     const { result } = renderHook(() => useVlc())
     await act(async () => {
       await result.current.play({ url: 'u', userAgent: null, referrer: null }).catch(() => {})
