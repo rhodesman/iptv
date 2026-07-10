@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import express from 'express'
 import * as fs from 'fs-extra'
 import path from 'node:path'
@@ -32,10 +33,23 @@ export function createApp(deps: { vlc: VlcLike; catalogPath: string }): express.
     }
   })
 
-  app.post('/api/play', (req, res) => handle(res, () => deps.vlc.play(req.body)))
+  app.post('/api/play', (req, res) => {
+    if (typeof req.body.url !== 'string' || req.body.url === '') {
+      res.status(400).json({ error: 'bad_request' })
+      return
+    }
+    handle(res, () => deps.vlc.play(req.body))
+  })
   app.post('/api/pause', (_req, res) => handle(res, () => deps.vlc.pause()))
   app.post('/api/stop', (_req, res) => handle(res, () => deps.vlc.stop()))
-  app.post('/api/volume', (req, res) => handle(res, () => deps.vlc.setVolume(Number(req.body.value))))
+  app.post('/api/volume', (req, res) => {
+    const value = Number(req.body.value)
+    if (!isFinite(value)) {
+      res.status(400).json({ error: 'bad_request' })
+      return
+    }
+    handle(res, () => deps.vlc.setVolume(value))
+  })
   app.get('/api/status', (_req, res) => handle(res, () => deps.vlc.getStatus(), true))
 
   const dist = path.resolve('app/web/dist')
@@ -63,7 +77,7 @@ async function main() {
   await ensureCatalog(cfg.catalogPath)
   const vlc = new VlcClient({ host: cfg.vlcHost, port: cfg.vlcPort, password: cfg.vlcPassword })
   const app = createApp({ vlc, catalogPath: cfg.catalogPath })
-  app.listen(cfg.appPort, () => {
+  app.listen(cfg.appPort, '127.0.0.1', () => {
     // eslint-disable-next-line no-console
     console.log(`channel browser on http://localhost:${cfg.appPort}`)
   })

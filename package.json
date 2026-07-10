@@ -67,6 +67,7 @@
     "commander": "^14.0.0",
     "console-table-printer": "^2.14.6",
     "cross-env": "^10.0.0",
+    "dotenv": "^17.4.2",
     "es-toolkit": "^1.45.1",
     "eslint": "^9.32.0",
     "express": "^5.2.1",

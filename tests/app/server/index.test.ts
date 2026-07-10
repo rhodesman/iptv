@@ -37,6 +37,24 @@ describe('createApp', () => {
     expect(play).toHaveBeenCalledWith({ url: 'https://ex/a.m3u8' })
   })
 
+  it('returns 400 for /api/play with missing url', async () => {
+    const play = jest.fn().mockResolvedValue(undefined)
+    const app = createApp({ vlc: makeVlc({ play }), catalogPath: CATALOG })
+    const res = await request(app).post('/api/play').send({})
+    expect(res.status).toBe(400)
+    expect(res.body).toEqual({ error: 'bad_request' })
+    expect(play).not.toHaveBeenCalled()
+  })
+
+  it('returns 400 for /api/volume with missing value', async () => {
+    const setVolume = jest.fn().mockResolvedValue(undefined)
+    const app = createApp({ vlc: makeVlc({ setVolume }), catalogPath: CATALOG })
+    const res = await request(app).post('/api/volume').send({})
+    expect(res.status).toBe(400)
+    expect(res.body).toEqual({ error: 'bad_request' })
+    expect(setVolume).not.toHaveBeenCalled()
+  })
+
   it('maps VlcError to 502 with error code', async () => {
     const getStatus = jest.fn().mockRejectedValue(new VlcError('vlc_unreachable', 'no vlc'))
     const app = createApp({ vlc: makeVlc({ getStatus }), catalogPath: CATALOG })

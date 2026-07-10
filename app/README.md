@@ -47,3 +47,4 @@ npm run app:catalog    # rebuild app/catalog.json
 - **"Can't reach VLC"** — VLC isn't running or the web interface is off. Redo the setup above.
 - **"VLC rejected the password"** — `VLC_PASSWORD` in `.env` doesn't match VLC's HTTP password.
 - **Some streams don't play** — they may be geo-blocked or offline; the card shows `Geo-blocked` / `Not 24/7` labels where known.
+- **The helper server is local-only** — it binds to `127.0.0.1` and has no authentication, so only your machine can reach it.
