@@ -21,26 +21,31 @@ describe('VlcClient', () => {
       res.end(STATUS_XML)
     })
     const client = new VlcClient({ host: 'localhost', port, password: 'pw' })
-    await client.play({
-      url: 'https://ex.com/a.m3u8',
-      userAgent: 'Moz/5',
-      referrer: 'https://ref'
-    })
-    server.close()
-
-    expect(capturedUrl).toContain('command=in_play')
-    expect(capturedUrl).toContain('input=https%3A%2F%2Fex.com%2Fa.m3u8')
-    expect(capturedUrl).toContain('option=%3Ahttp-user-agent%3DMoz%2F5')
-    expect(capturedUrl).toContain('option=%3Ahttp-referrer%3Dhttps%3A%2F%2Fref')
-    expect(capturedAuth).toMatch(/^Basic /)
+    try {
+      await client.play({
+        url: 'https://ex.com/a.m3u8',
+        userAgent: 'Moz/5',
+        referrer: 'https://ref'
+      })
+      expect(capturedUrl).toContain('command=in_play')
+      expect(capturedUrl).toContain('input=https%3A%2F%2Fex.com%2Fa.m3u8')
+      expect(capturedUrl).toContain('option=%3Ahttp-user-agent%3DMoz%2F5')
+      expect(capturedUrl).toContain('option=%3Ahttp-referrer%3Dhttps%3A%2F%2Fref')
+      expect(capturedAuth).toMatch(/^Basic /)
+    } finally {
+      server.close()
+    }
   })
 
   it('parses status', async () => {
     const { server, port } = await startFakeVlc((_req, res) => res.end(STATUS_XML))
     const client = new VlcClient({ host: 'localhost', port, password: 'pw' })
-    const status = await client.getStatus()
-    server.close()
-    expect(status).toEqual({ state: 'playing', volume: 256 })
+    try {
+      const status = await client.getStatus()
+      expect(status).toEqual({ state: 'playing', volume: 256 })
+    } finally {
+      server.close()
+    }
   })
 
   it('maps 401 to vlc_auth', async () => {
@@ -49,8 +54,11 @@ describe('VlcClient', () => {
       res.end('unauthorized')
     })
     const client = new VlcClient({ host: 'localhost', port, password: 'wrong' })
-    await expect(client.getStatus()).rejects.toMatchObject({ code: 'vlc_auth' })
-    server.close()
+    try {
+      await expect(client.getStatus()).rejects.toMatchObject({ code: 'vlc_auth' })
+    } finally {
+      server.close()
+    }
   })
 
   it('maps connection refused to vlc_unreachable', async () => {

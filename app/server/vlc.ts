@@ -29,7 +29,8 @@ export class VlcClient {
   }
 
   private async request(qs: URLSearchParams): Promise<string> {
-    const suffix = qs.toString() ? `?${qs.toString()}` : ''
+    const query = qs.toString()
+    const suffix = query ? `?${query}` : ''
     try {
       const res = await this.http.get(`/requests/status.xml${suffix}`)
       return String(res.data)
