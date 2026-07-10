@@ -18,7 +18,7 @@
     "lint": "npx eslint \"scripts/**/*.{ts,js}\" \"tests/**/*.{ts,js}\"",
     "test": "jest --runInBand",
     "postinstall": "npm run api:load",
-    "app:catalog": "tsx scripts/commands/app/catalog.ts",
+    "app:catalog": "tsx scripts/commands/app/build.ts",
     "app:dev": "concurrently -k \"tsx watch app/server/index.ts\" \"vite --config app/web/vite.config.ts\"",
     "app:build": "vite --config app/web/vite.config.ts build",
     "app:start": "tsx app/server/index.ts",
