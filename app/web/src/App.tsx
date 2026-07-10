@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useCatalog } from './hooks/useCatalog'
 import { useVlc } from './hooks/useVlc'
 import { filterChannels } from './lib/filtering'
@@ -28,11 +28,12 @@ export default function App() {
     [catalog, filters]
   )
 
-  const onPlay = (stream: StreamEntry, channel: ChannelEntry) => {
+  useEffect(() => { setDismissed(false) }, [catalogError, vlcError])
+
+  const onPlay = useCallback((stream: StreamEntry, channel: ChannelEntry) => {
     setNowPlaying(channel.name)
-    setDismissed(false)
     void play({ url: stream.url, userAgent: stream.userAgent, referrer: stream.referrer }).catch(() => {})
-  }
+  }, [play])
 
   const activeError = dismissed ? null : catalogError || vlcError
 

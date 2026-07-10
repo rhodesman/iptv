@@ -37,7 +37,7 @@ export function ChannelCard({
           onChange={e => setIndex(Number(e.target.value))}
         >
           {channel.streams.map((s, i) => (
-            <option key={i} value={i}>{s.quality || `Source ${i + 1}`}</option>
+            <option key={s.url} value={i}>{s.quality || `Source ${i + 1}`}</option>
           ))}
         </select>
       )}
