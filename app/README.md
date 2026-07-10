@@ -15,9 +15,11 @@ Enable VLC's web (HTTP) interface:
 ## Configure
 
 ```sh
-cp app/.env.example .env
-# edit .env and set VLC_PASSWORD to the password you set in VLC
+cp app/.env.example app/.env
+# edit app/.env and set VLC_PASSWORD to the password you set in VLC
 ```
+
+The server loads `app/.env` (a repo-root `.env` also works as a fallback). `app/.env` is gitignored, so your password is never committed.
 
 ## Run
 
@@ -45,6 +47,6 @@ npm run app:catalog    # rebuild app/catalog.json
 ## Troubleshooting
 
 - **"Can't reach VLC"** — VLC isn't running or the web interface is off. Redo the setup above.
-- **"VLC rejected the password"** — `VLC_PASSWORD` in `.env` doesn't match VLC's HTTP password.
+- **"VLC rejected the password"** — `VLC_PASSWORD` in `app/.env` doesn't match VLC's HTTP password (or `app/.env` is missing, so the password is empty). Confirm the file is at `app/.env` and the value matches what you set in VLC.
 - **Some streams don't play** — they may be geo-blocked or offline; the card shows `Geo-blocked` / `Not 24/7` labels where known.
 - **The helper server is local-only** — it binds to `127.0.0.1` and has no authentication, so only your machine can reach it.

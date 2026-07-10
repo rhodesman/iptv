@@ -1,4 +1,7 @@
-import 'dotenv/config'
+import dotenv from 'dotenv'
+// Load env from app/.env first (next to app/.env.example), then a repo-root .env
+// as a fallback. Earlier paths win, so app/.env takes precedence.
+dotenv.config({ path: ['app/.env', '.env'], quiet: true })
 import express from 'express'
 import * as fs from 'fs-extra'
 import path from 'node:path'
