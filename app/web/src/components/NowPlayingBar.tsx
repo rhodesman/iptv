@@ -15,7 +15,7 @@ export function NowPlayingBar({
 }) {
   return (
     <footer className="nowplaying">
-      <span>▶ {channelName ? channelName : 'Nothing playing'}</span>
+      <span>{status?.state === 'playing' ? '▶ ' : ''}{channelName ? channelName : 'Nothing playing'}</span>
       {status && <span className="badge">{status.state}</span>}
       <button onClick={onPause} aria-label="Pause">⏸</button>
       <button onClick={onStop} aria-label="Stop">⏹</button>
@@ -28,6 +28,7 @@ export function NowPlayingBar({
           value={status?.volume ?? 256}
           onChange={e => onVolume(Number(e.target.value))}
           aria-label="Volume"
+          disabled={!status}
         />
       </label>
     </footer>

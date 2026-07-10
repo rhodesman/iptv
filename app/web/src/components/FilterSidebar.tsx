@@ -16,7 +16,7 @@ export function FilterSidebar({
   onChange(next: FilterState): void
 }) {
   const section = (title: string, axis: Axis, facets: (Facet | CountryFacet)[]) => (
-    <div className="facet" key={axis}>
+    <div className="facet">
       <h4>{title}</h4>
       {facets.map(f => (
         <label key={f.id}>
