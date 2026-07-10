@@ -46,6 +46,31 @@ describe('FilterSidebar', () => {
     expect(text.indexOf('News')).toBeLessThan(text.indexOf('Sports'))
   })
 
+  it('shows the NSFW facet normally but hides it when adult content is hidden', () => {
+    const withNsfw = {
+      ...catalogFilters,
+      categories: [
+        { id: 'news', name: 'News', count: 2 },
+        { id: 'nsfw', name: 'NSFW', count: 4 }
+      ]
+    }
+    const { rerender } = render(
+      <FilterSidebar filters={EMPTY_FILTERS} catalogFilters={withNsfw} onChange={vi.fn()} />
+    )
+    expect(screen.getByLabelText(/NSFW/)).toBeInTheDocument()
+
+    rerender(
+      <FilterSidebar
+        filters={{ ...EMPTY_FILTERS, hideAdult: true }}
+        catalogFilters={withNsfw}
+        onChange={vi.fn()}
+      />
+    )
+    expect(screen.queryByLabelText(/NSFW/)).not.toBeInTheDocument()
+    // a non-adult facet is still there
+    expect(screen.getByLabelText(/News/)).toBeInTheDocument()
+  })
+
   it('collapses and expands a section when its header is clicked', async () => {
     render(<FilterSidebar filters={EMPTY_FILTERS} catalogFilters={catalogFilters} onChange={vi.fn()} />)
     // expanded by default: the News checkbox is visible

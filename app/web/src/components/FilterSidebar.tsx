@@ -60,6 +60,12 @@ export function FilterSidebar({
     )
   }
 
+  // when adult content is hidden, drop the synthetic NSFW facet so it can't be
+  // selected into an empty result
+  const categoryFacets = filters.hideAdult
+    ? catalogFilters.categories.filter(f => f.id !== 'nsfw')
+    : catalogFilters.categories
+
   return (
     <aside className="sidebar">
       <label>
@@ -70,7 +76,7 @@ export function FilterSidebar({
         />
         <span>Hide adult</span>
       </label>
-      {section('Category', 'categories', catalogFilters.categories)}
+      {section('Category', 'categories', categoryFacets)}
       {section('Country', 'countries', catalogFilters.countries)}
       {section('Language', 'languages', catalogFilters.languages)}
     </aside>

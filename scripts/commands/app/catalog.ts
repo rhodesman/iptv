@@ -56,14 +56,20 @@ export async function buildCatalog(): Promise<Catalog> {
       }
     })
 
+    // surface the is_nsfw flag as a synthetic "nsfw" category so it appears
+    // as a browsable/filterable facet alongside the real categories
+    const isNsfw = channel.is_nsfw === true
+    const categories = [...(channel.categories || [])]
+    if (isNsfw && !categories.includes('nsfw')) categories.push('nsfw')
+
     channels.push({
       id: channelId,
       name: channel.name,
       logo,
-      categories: channel.categories || [],
+      categories,
       country: channel.country || null,
       languages: [...languages],
-      isNsfw: channel.is_nsfw === true,
+      isNsfw,
       streams: entryStreams
     })
   }
@@ -88,9 +94,11 @@ function buildFilters(channels: ChannelEntry[]): Catalog['filters'] {
     for (const l of ch.languages) langCount.set(l, (langCount.get(l) || 0) + 1)
   }
 
+  // 'nsfw' is a synthetic category derived from the is_nsfw flag, not an API category
+  const categoryNameOverrides: Record<string, string> = { nsfw: 'NSFW' }
   const categories: Facet[] = [...catCount].map(([id, count]) => ({
     id,
-    name: apiData.categoriesKeyById.get(id)?.name || id,
+    name: categoryNameOverrides[id] || apiData.categoriesKeyById.get(id)?.name || id,
     count
   }))
 
