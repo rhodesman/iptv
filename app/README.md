@@ -2,6 +2,15 @@
 
 A local web app to browse the channel catalog by category, country, and language (with search) and control VLC live — click a channel and VLC plays it.
 
+## Features
+
+- **Browse & filter** by category, country, and language, plus free-text search. Filters combine as OR *within* a facet and AND *across* facets (e.g. News + Sports, in the US).
+- **Sidebar** facets are sorted alphabetically, show per-facet counts, and each section (Category / Country / Language) is independently collapsible.
+- **NSFW handling** — channels flagged `is_nsfw` in the database are surfaced as a synthetic **NSFW** category. The **Hide adult** checkbox filters those channels out and removes the NSFW facet from the sidebar. (In practice iptv-org carries almost no adult streams, so this affects only a handful of channels.)
+- **Channel grid** is virtualized, so 10k+ channels scroll smoothly. Each card shows the logo (or initials), name, category/quality/label badges, and — when a channel has multiple streams — a quality/source picker.
+- **Live VLC control** — clicking a channel plays it in VLC; a now-playing bar offers pause, stop, and a volume slider, and reflects VLC's status (polled every ~2s).
+- **Shareable state** — the active filters and search live in the URL, so a filtered view survives refresh and can be bookmarked.
+
 ## One-time VLC setup
 
 Enable VLC's web (HTTP) interface:
@@ -37,10 +46,10 @@ npm run app:dev        # Vite dev server + API server together
 
 ## Refresh channel data
 
-The catalog is a snapshot. To pull the latest channels/streams:
+`app/catalog.json` is a **generated artifact** (gitignored) built from the iptv-org API metadata joined with this repo's stream URLs. The server auto-builds it on first run only if it's missing, so regenerate it explicitly when you want fresher data — or after pulling changes that affect the builder (e.g. the NSFW category):
 
 ```sh
-npm run api:load       # refresh upstream data
+npm run api:load       # refresh upstream data (channels/streams)
 npm run app:catalog    # rebuild app/catalog.json
 ```
 
