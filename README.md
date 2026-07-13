@@ -48,6 +48,10 @@ The API documentation can be found in the [iptv-org/api](https://github.com/iptv
 
 Links to other useful IPTV-related resources can be found in the [iptv-org/awesome-iptv](https://github.com/iptv-org/awesome-iptv) repository.
 
+## Channel Browser (local app)
+
+A local web UI to browse channels by category/country/language and control VLC live. See [app/README.md](app/README.md).
+
 ## Discussions
 
 If you have a question or idea, welcome to the [Discussions](https://github.com/orgs/iptv-org/discussions).

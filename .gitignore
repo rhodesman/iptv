@@ -7,3 +7,5 @@ node_modules
 /.api/
 .env
 /temp/
+/app/catalog.json
+/app/web/dist/
